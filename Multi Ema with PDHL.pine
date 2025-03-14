@@ -1,0 +1,41 @@
+//@version=6
+indicator("Mult EMAs with DHL", shorttitle="M_EMAs with PDHL", overlay=true)
+
+// Day High Low Logic
+D_High = request.security(syminfo.tickerid, "D", high[1])
+D_Low = request.security(syminfo.tickerid, "D", low[1])
+D_Close = request.security(syminfo.tickerid, "D", close[1])
+D_Open = request.security(syminfo.tickerid, "D", open[1])
+
+plot(timeframe.isintraday ? D_High : na, title="Daily High", style=plot.style_line, color=color.blue, linewidth=1)
+plot(timeframe.isintraday ? D_Low : na, title="Daily Low", style=plot.style_line, color=color.blue, linewidth=1)
+
+// Input Parameters
+source = input.source(close, "Source")
+ema1Day = input.int(50, title="Day EMA Ultra Fast", minval=1)
+ema2Day = input.int(100, title="Day EMA Fast", minval=1)
+ema3Day = input.int(200, title="Day EMA Medium", minval=1)
+ema4Day = input.int(300, title="Day Slow", minval=1)
+ema5Day = input.int(400, title="Day Ultra Slow", minval=1)
+switchOnIntraDay = input.bool(true, "Auto Switch on IntraDay")
+ema1IntraDay = input.int(20, title="Intraday EMA Ultra Fast", minval=1)
+ema2IntraDay = input.int(50, title="Intraday EMA Fast", minval=1)
+ema3IntraDay = input.int(100, title="Intraday EMA Medium", minval=1)
+ema4IntraDay = input.int(200, title="Intraday EMA Slow", minval=1)
+ema5IntraDay = input.int(400, title="Intraday EMA Ultra Slow", minval=1)
+
+// Set up EMAs
+ema1 = timeframe.isintraday and switchOnIntraDay ? ema1IntraDay : ema1Day
+ema2 = timeframe.isintraday and switchOnIntraDay ? ema2IntraDay : ema2Day
+ema3 = timeframe.isintraday and switchOnIntraDay ? ema3IntraDay : ema3Day
+ema4 = timeframe.isintraday and switchOnIntraDay ? ema4IntraDay : ema4Day
+ema5 = timeframe.isintraday and switchOnIntraDay ? ema5IntraDay : ema5Day
+
+// Plot EMAs
+plot(ta.ema(source, ema1), color=color.yellow, title="EMA Ultra Fast")
+plot(ta.ema(source, ema2), color=color.blue, title="EMA Fast")
+plot(ta.ema(source, ema3), color=color.green, title="EMA Medium")
+plot(ta.ema(source, ema4), color=color.red, title="EMA Slow")
+plot(ta.ema(source, ema5), color=color.white, title="EMA Ultra Slow")
+
+// last updated 14 March 2025
